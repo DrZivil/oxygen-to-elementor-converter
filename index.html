@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oxygen → Bricks Converter</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Oxygen 4.9 → Bricks Converter</h1>
+            <p class="description">Convert Oxygen JSON to Bricks-compatible format</p>
+        </header>
+
+        <div class="converter-container">
+            <div class="input-container">
+                <label for="input">Paste Oxygen 4.9 JSON</label>
+                <textarea id="input" placeholder="Paste Oxygen 4.9 JSON here..." rows="20"></textarea>
+            </div>
+            
+            <div class="output-container">
+                <label for="output">Bricks JSON Output</label>
+                <textarea id="output" placeholder="Bricks JSON will appear here..." rows="20" readonly></textarea>
+                <div class="output-actions">
+                    <button id="copy" class="btn small">Copy to Clipboard</button>
+                    <button id="download" class="btn small">Download JSON</button>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button id="convert" class="btn primary">Convert</button>
+                <button id="load-example" class="btn secondary">Load Example</button>
+            </div>
+            
+            <div id="class-info" class="class-info">
+                <h3>Class Conversion</h3>
+                <div id="class-list" class="class-list">
+                    <p>Classes will appear here after conversion.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Oxygen to Bricks Converter · <span id="year"></span></p>
+        </footer>
+    </div>
+
+    <script src="bricks-converter.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "id": 0,
+  "name": "ct_div_block",
+  "options": {
+    "ct_content": "",
+    "classes": [
+      "bg-red"
+    ]
+  },
+  "children": [
+    {
+      "id": 1,
+      "name": "ct_headline",
+      "options": {
+        "ct_content": "Hello Bricks!",
+        "classes": [
+          "text-white"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "ct_text_block",
+      "options": {
+        "ct_content": "This is a text block with multiple classes.",
+        "classes": [
+          "p-20",
+          "rounded-lg",
+          "text-blue"
+        ]
+      }
+    }
+  ]
+}

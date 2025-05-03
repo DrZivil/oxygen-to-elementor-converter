@@ -1,0 +1,172 @@
+/* Oxygen to Bricks Converter Styles */
+.oxygen-to-bricks-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.otb-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.otb-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #6873E5;
+}
+
+.otb-description {
+    color: #555;
+    font-size: 1rem;
+}
+
+.otb-converter-container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.otb-input-container, .otb-output-container {
+    margin-bottom: 1.5rem;
+    flex: 1;
+    min-width: 300px;
+}
+
+.otb-input-container label, .otb-output-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #1A1A1A;
+}
+
+.otb-input-container textarea, .otb-output-container textarea {
+    width: 100%;
+    border: 1px solid #E0E0E6;
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 14px;
+    resize: vertical;
+    background-color: #FAFAFA;
+    transition: border-color 0.2s;
+    min-height: 300px;
+}
+
+.otb-input-container textarea:focus, .otb-output-container textarea:focus {
+    outline: none;
+    border-color: #6873E5;
+    box-shadow: 0 0 0 2px rgba(104, 115, 229, 0.2);
+}
+
+.otb-output-container textarea {
+    background-color: #FBFBFB;
+}
+
+.otb-actions {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.otb-output-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    justify-content: flex-end;
+}
+
+.otb-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.otb-btn.otb-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.otb-btn.otb-primary {
+    background-color: #6873E5;
+    color: white;
+}
+
+.otb-btn.otb-secondary {
+    background-color: white;
+    color: #1A1A1A;
+    border: 1px solid #E0E0E6;
+}
+
+.otb-btn.otb-primary:hover {
+    background-color: #5562E0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(104, 115, 229, 0.3);
+}
+
+.otb-btn.otb-secondary:hover {
+    border-color: #6873E5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.otb-btn.otb-small:hover {
+    transform: translateY(-1px);
+}
+
+.otb-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    background-color: #333;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.otb-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.otb-notification.success {
+    background-color: #45B96F;
+}
+
+.otb-notification.error {
+    background-color: #E54D4D;
+}
+
+.otb-notification.warning {
+    background-color: #F7984B;
+}
+
+@media (max-width: 768px) {
+    .oxygen-to-bricks-container {
+        padding: 1rem;
+    }
+    
+    .otb-title {
+        font-size: 1.75rem;
+    }
+    
+    .otb-converter-container {
+        flex-direction: column;
+    }
+}
