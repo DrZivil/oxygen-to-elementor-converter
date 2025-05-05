@@ -1,0 +1,11 @@
+{
+  "name": "oxygen-to-bricks-converter",
+  "version": "1.0.0",
+  "description": "Convert Oxygen Builder JSON to Bricks Builder format",
+  "type": "module",
+  "scripts": {
+    "test": "node run-test.js"
+  },
+  "author": "",
+  "license": "MIT"
+}
