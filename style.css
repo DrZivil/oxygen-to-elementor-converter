@@ -46,6 +46,13 @@ h1 {
     font-size: 1.1rem;
 }
 
+.note {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
 .converter-container {
     background-color: white;
     border-radius: 12px;
@@ -185,10 +192,101 @@ textarea#output {
     background-color: #f1f4f9;
 }
 
+/* Tag styles for class type */
+.tag {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.tag.auto {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+}
+
+.tag.original {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+}
+
+/* Property count and groups */
+.property-count {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.group-badge {
+    display: inline-block;
+    padding: 0.15rem 0.4rem;
+    margin: 0.15rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.group-badge.typography {
+    background-color: #bbdefb;
+    color: #0d47a1;
+}
+
+.group-badge.background {
+    background-color: #c8e6c9;
+    color: #1b5e20;
+}
+
+.group-badge.border {
+    background-color: #f8bbd0;
+    color: #880e4f;
+}
+
+.group-badge.spacing {
+    background-color: #ffe0b2;
+    color: #e65100;
+}
+
+.group-badge.layout {
+    background-color: #d1c4e9;
+    color: #4527a0;
+}
+
+/* Class extraction summary */
+.class-summary {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #e3f2fd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.class-summary p {
+    margin: 0;
+    color: #0d47a1;
+}
+
 footer {
     text-align: center;
     color: #777;
     font-size: 0.9rem;
+}
+
+/* Badge styles */
+.badge {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.badge.secondary {
+    background-color: var(--secondary-color);
 }
 
 @media (max-width: 768px) {
