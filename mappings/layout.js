@@ -8,10 +8,16 @@ function mapLayoutProperties(properties) {
   
   // Direct-mapping properties
   const directProps = [
-    "display", "flex-direction", "flex-wrap", "justify-content", 
-    "align-items", "align-self", "flex-grow", "flex-shrink", 
-    "flex-basis", "position", "top", "right", "bottom", "left", "z-index"
+    "display", "flex-direction", "flex-wrap", "justify-content",
+    "align-items", "align-self", "flex-grow", "flex-shrink",
+    "flex-basis", "position", "top", "right", "bottom", "left", "z-index",
+    "gap", "row-gap", "column-gap", "order",
+
+    // New grid-specific keys
+    "grid-column-count", "grid-column-gap", "grid-column-min-width", "grid-column-max-width",
+    "grid-align-items", "grid-justify-items"
   ];
+
   
   for (const prop of directProps) {
     if (properties[prop] != null) {

@@ -9,7 +9,7 @@ import { mapBackgroundProperties } from '../mappings/backgrounds.js';
 import { mapBorderProperties } from '../mappings/borders.js';
 import { mapPaddingProperties, mapMarginProperties } from '../mappings/spacing.js';
 import { mapLayoutProperties } from '../mappings/layout.js';
-import { mapToBricksUIProps } from '../mappings/bricksLayoutUI.js';
+import {mapGridProperties, mapToBricksUIProps} from '../mappings/bricksLayoutUI.js';
 
 /**
  * Maps Oxygen styles to Bricks style groups
@@ -137,6 +137,12 @@ function transformSettings(node, rootClasses = {}) {
     const uiProps = mapToBricksUIProps(layoutProps);
     Object.assign(settings, uiProps);
   }
+
+  if (merged["display"] === "grid") {
+    const gridUI = mapGridProperties(merged); // Use merged
+    Object.assign(settings, gridUI);          // Add Bricks UI props
+  }
+
 
   return settings;
 }
