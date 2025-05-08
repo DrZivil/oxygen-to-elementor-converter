@@ -1,6 +1,7 @@
 /**
  * Oxygen to Bricks Converter - Settings Transformer
  * Handles the transformation of Oxygen settings to Bricks format
+ * Fixed version that avoids duplicating class styles
  */
 
 import { STYLE_GROUPS } from '../config/propertyGroups.js';
@@ -9,50 +10,38 @@ import { mapBackgroundProperties } from '../mappings/backgrounds.js';
 import { mapBorderProperties } from '../mappings/borders.js';
 import { mapPaddingProperties, mapMarginProperties } from '../mappings/spacing.js';
 import { mapLayoutProperties } from '../mappings/layout.js';
-import {mapGridProperties, mapToBricksUIProps} from '../mappings/bricksLayoutUI.js';
+import { mapGridProperties, mapToBricksUIProps } from '../mappings/bricksLayoutUI.js';
 
 /**
- * Maps Oxygen styles to Bricks style groups
- * @param {Object} original - Original Oxygen properties
- * @returns {Object} - Properties organized by Bricks style groups
+ * Extracts only the inline styles from a node, excluding styles from classes
+ * @param {Object} nodeStyles - Direct inline styles from the element
+ * @param {Object} classStyles - Merged styles from all classes
+ * @returns {Object} - Only the styles that are truly inline (not from classes)
  */
-function mapStyleToGroups(original = {}) {
-  const settings = {};
-
-  // Map properties to their respective groups
-  for (const [group, keys] of Object.entries(STYLE_GROUPS)) {
-    for (const key of keys) {
-      if (original[key] != null) {
-        settings[group] ??= {};
-        settings[group][key] = original[key];
-      }
+function extractInlineOnlyStyles(nodeStyles, classStyles) {
+  const inlineOnly = {};
+  
+  for (const [key, value] of Object.entries(nodeStyles)) {
+    // Only include if the value is different from class styles or not in class styles
+    if (!classStyles.hasOwnProperty(key) || classStyles[key] !== value) {
+      inlineOnly[key] = value;
     }
   }
-
-  // Handle color fields as Bricks expects them
-  if (original["color"]?.startsWith("#")) {
-    settings._typography ??= {};
-    settings._typography.color = { hex: original["color"] };
-  }
-
-  if (original["background-color"]?.startsWith("#")) {
-    settings._background ??= {};
-    settings._background.color = { hex: original["background-color"] };
-  }
-
-  return settings;
+  
+  return inlineOnly;
 }
 
 /**
- * Transforms Oxygen settings to Bricks settings with more accurate property mapping
+ * Transforms Oxygen settings to Bricks settings, excluding class styles
  * @param {Object} node - Oxygen node with options
- * @returns {Object} - Bricks settings object
+ * @param {Object} rootClasses - Global class definitions
+ * @returns {Object} - Bricks settings object with only inline styles
  */
 function transformSettings(node, rootClasses = {}) {
   const opts = node.options ?? {};
   let nodeStyles = {};
 
-  // Determine inline styles from Oxygen node
+  // Get inline styles from the node
   if (opts.original) {
     if (Array.isArray(opts.original)) {
       nodeStyles = { ...opts };
@@ -70,7 +59,7 @@ function transformSettings(node, rootClasses = {}) {
     }
   }
 
-  // Merge styles from class definitions
+  // Get styles from classes
   const classNames = Array.isArray(opts.classes) ? opts.classes : [];
   const classDefs = classNames
     .map(cls => rootClasses?.[cls])
@@ -83,8 +72,8 @@ function transformSettings(node, rootClasses = {}) {
     }
   }
 
-  // Final merged style object (node wins over class styles)
-  const merged = { ...classStyles, ...nodeStyles };
+  // Extract only the inline styles (excluding class styles)
+  const inlineOnly = extractInlineOnlyStyles(nodeStyles, classStyles);
 
   const settings = {};
 
@@ -94,31 +83,89 @@ function transformSettings(node, rootClasses = {}) {
   }
 
   // Handle code content
-  if (node.name === "ct_code_block" && merged["code-php"]) {
-    settings.text = merged["code-php"];
+  if (node.name === "ct_code_block" && inlineOnly["code-php"]) {
+    settings.text = inlineOnly["code-php"];
   }
 
+  // Typography - only include if there are inline overrides
+  const typographyProps = mapTypographyProperties(inlineOnly);
+  if (Object.keys(typographyProps).length > 0) {
+    settings._typography = typographyProps;
+  }
+
+  // Background - only include if there are inline overrides
+  const backgroundProps = mapBackgroundProperties(inlineOnly);
+  if (Object.keys(backgroundProps).length > 0) {
+    settings._background = backgroundProps;
+  }
+
+  // Border - only include if there are inline overrides
+  const borderProps = mapBorderProperties(inlineOnly);
+  if (Object.keys(borderProps).length > 0) {
+    settings._border = borderProps;
+  }
+
+  // Spacing - only include if there are inline overrides
+  const paddingProps = mapPaddingProperties(inlineOnly);
+  const marginProps = mapMarginProperties(inlineOnly);
+  if (Object.keys(paddingProps).length > 0 || Object.keys(marginProps).length > 0) {
+    settings._spacing = {
+      ...paddingProps,
+      ...marginProps
+    };
+  }
+
+  // Layout - only include if there are inline overrides
+  const layoutProps = mapLayoutProperties(inlineOnly);
+  if (Object.keys(layoutProps).length > 0) {
+    settings._layout = layoutProps;
+
+    // Bricks-native layout UI props
+    const uiProps = mapToBricksUIProps(layoutProps);
+    Object.assign(settings, uiProps);
+  }
+
+  // Grid properties - only if display is grid and there are inline overrides
+  if (inlineOnly["display"] === "grid") {
+    const gridUI = mapGridProperties(inlineOnly);
+    Object.assign(settings, gridUI);
+  }
+
+  return settings;
+}
+
+/**
+ * Transforms class definition styles to Bricks global class format
+ * @param {Object} classDefinition - Oxygen class definition
+ * @returns {Object} - Bricks global class settings
+ */
+function transformClassSettings(classDefinition) {
+  if (!classDefinition?.original) return {};
+
+  const original = classDefinition.original;
+  const settings = {};
+
   // Typography
-  const typographyProps = mapTypographyProperties(merged);
+  const typographyProps = mapTypographyProperties(original);
   if (Object.keys(typographyProps).length > 0) {
     settings._typography = typographyProps;
   }
 
   // Background
-  const backgroundProps = mapBackgroundProperties(merged);
+  const backgroundProps = mapBackgroundProperties(original);
   if (Object.keys(backgroundProps).length > 0) {
     settings._background = backgroundProps;
   }
 
   // Border
-  const borderProps = mapBorderProperties(merged);
+  const borderProps = mapBorderProperties(original);
   if (Object.keys(borderProps).length > 0) {
     settings._border = borderProps;
   }
 
   // Spacing
-  const paddingProps = mapPaddingProperties(merged);
-  const marginProps = mapMarginProperties(merged);
+  const paddingProps = mapPaddingProperties(original);
+  const marginProps = mapMarginProperties(original);
   if (Object.keys(paddingProps).length > 0 || Object.keys(marginProps).length > 0) {
     settings._spacing = {
       ...paddingProps,
@@ -127,24 +174,22 @@ function transformSettings(node, rootClasses = {}) {
   }
 
   // Layout
-  const layoutProps = mapLayoutProperties(merged);
-  console.log("Layout props", layoutProps);
+  const layoutProps = mapLayoutProperties(original);
   if (Object.keys(layoutProps).length > 0) {
     settings._layout = layoutProps;
-
 
     // Bricks-native layout UI props
     const uiProps = mapToBricksUIProps(layoutProps);
     Object.assign(settings, uiProps);
   }
 
-  if (merged["display"] === "grid") {
-    const gridUI = mapGridProperties(merged); // Use merged
-    Object.assign(settings, gridUI);          // Add Bricks UI props
+  // Grid properties
+  if (original["display"] === "grid") {
+    const gridUI = mapGridProperties(original);
+    Object.assign(settings, gridUI);
   }
-
 
   return settings;
 }
 
-export { mapStyleToGroups, transformSettings };
+export { transformSettings, transformClassSettings, extractInlineOnlyStyles };

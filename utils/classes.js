@@ -4,16 +4,11 @@
  */
 
 import { generateId } from './generators.js';
+import { transformClassSettings } from '../transformers/settings.js';
 import { TYPOGRAPHY_PATTERNS } from '../mappings/typography.js';
 import { BACKGROUND_PATTERNS } from '../mappings/backgrounds.js';
 import { BORDER_PATTERNS } from '../mappings/borders.js';
 import { SPACING_PATTERNS } from '../mappings/spacing.js';
-// import { LAYOUT_PATTERNS } from '../mappings/layout.js';
-import { mapTypographyProperties } from '../mappings/typography.js';
-import { mapBackgroundProperties } from '../mappings/backgrounds.js';
-import { mapBorderProperties } from '../mappings/borders.js';
-import { mapPaddingProperties, mapMarginProperties } from '../mappings/spacing.js';
-import { mapLayoutProperties } from '../mappings/layout.js';
 
 // Combine all property patterns
 const CSS_PROPERTY_PATTERNS = {
@@ -21,76 +16,7 @@ const CSS_PROPERTY_PATTERNS = {
   ...BACKGROUND_PATTERNS,
   ...BORDER_PATTERNS,
   ...SPACING_PATTERNS,
-  // ...LAYOUT_PATTERNS
 };
-
-/**
- * Process a class definition from Oxygen to Bricks format
- * @param {Object} classDefinition - The Oxygen class definition
- * @returns {Object} - The processed style settings for Bricks
- */
-function processClassDefinition(classDefinition) {
-  const settings = {};
-  
-  // Extract original styles from the class definition
-  let original = {};
-  
-  // Handle different formats of original properties
-  if (classDefinition.original) {
-    // Handle array format (convert to object if needed)
-    if (Array.isArray(classDefinition.original)) {
-      // Empty array, try to find properties in the classDefinition itself
-      original = { ...classDefinition };
-      delete original.original;
-      delete original.key;
-      delete original.media;
-    } else {
-      // Object format (most common)
-      original = classDefinition.original;
-    }
-  }
-  
-  // Categorize and map properties by their groups
-  const typographyProps = mapTypographyProperties(original);
-  const backgroundProps = mapBackgroundProperties(original);
-  const borderProps = mapBorderProperties(original);
-  const paddingProps = mapPaddingProperties(original);
-  const marginProps = mapMarginProperties(original);
-  const layoutProps = mapLayoutProperties(original);
-  
-  // Add non-empty property groups to the settings
-  if (Object.keys(typographyProps).length > 0) {
-    settings._typography = typographyProps;
-  }
-  
-  if (Object.keys(backgroundProps).length > 0) {
-    settings._background = backgroundProps;
-  }
-  
-  if (Object.keys(borderProps).length > 0) {
-    settings._border = borderProps;
-  }
-  
-  if (Object.keys(paddingProps).length > 0) {
-    settings._spacing = {
-      ...settings._spacing,
-      ...paddingProps
-    };
-  }
-  
-  if (Object.keys(marginProps).length > 0) {
-    settings._spacing = {
-      ...settings._spacing,
-      ...marginProps
-    };
-  }
-  
-  if (Object.keys(layoutProps).length > 0) {
-    settings._layout = layoutProps;
-  }
-  
-  return settings;
-}
 
 /**
  * Parses a class name to determine its style settings
@@ -99,9 +25,9 @@ function processClassDefinition(classDefinition) {
  * @returns {Object} - Style settings for the class
  */
 function parseClassStyle(className, classDefinition = null) {
-  // If we have a class definition with styles, use it
+  // If we have a class definition with styles, use the new transformer
   if (classDefinition) {
-    return processClassDefinition(classDefinition);
+    return transformClassSettings(classDefinition);
   }
   
   // Otherwise, try to detect from class name patterns
