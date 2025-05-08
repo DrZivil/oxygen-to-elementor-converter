@@ -3,9 +3,9 @@
  * Plugin Name: Oxygen to Bricks Converter
  * Plugin URI: https://yourdomain.com/plugins/oxygen-to-bricks-converter
  * Description: A tool that converts Oxygen 4.9 JSON to Bricks Builder format
- * Version: 1.0.0
- * Author: Your Name
- * Author URI: https://yourdomain.com
+ * Version: 1.1.0
+ * Author: Philipp - Levels.dev
+ * Author URI: https://wpconverters.com/
  * Text Domain: oxygen-to-bricks-converter
  */
 
@@ -46,11 +46,20 @@ class OxygenToBricksConverter {
             // Register and enqueue scripts
             wp_register_script(
                 'oxygen-to-bricks-script',
-                plugin_dir_url(__FILE__) . 'assets/bricks-converter.js',
+                plugin_dir_url(__FILE__) . 'assets/main.js',
                 array('jquery'),
                 '1.0.0',
                 true
             );
+            
+            // Add module type attribute for ES6 modules
+            add_filter('script_loader_tag', function($tag, $handle, $src) {
+                if ('oxygen-to-bricks-script' === $handle) {
+                    $tag = '<script type="module" src="' . esc_url($src) . '" id="oxygen-to-bricks-script-js"></script>';
+                }
+                return $tag;
+            }, 10, 3);
+            
             wp_enqueue_script('oxygen-to-bricks-script');
         }
     }
