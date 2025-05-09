@@ -107,12 +107,13 @@ function transformSettings(node, rootClasses = {}) {
 
   // Spacing - only include if there are inline overrides
   const paddingProps = mapPaddingProperties(inlineOnly);
+  if (Object.keys(paddingProps).length > 0) {
+    settings._padding = paddingProps;
+  }
+
   const marginProps = mapMarginProperties(inlineOnly);
-  if (Object.keys(paddingProps).length > 0 || Object.keys(marginProps).length > 0) {
-    settings._spacing = {
-      ...paddingProps,
-      ...marginProps
-    };
+  if (Object.keys(marginProps).length > 0) {
+    settings._margin = marginProps;
   }
 
   // Layout - only include if there are inline overrides
@@ -163,14 +164,15 @@ function transformClassSettings(classDefinition) {
     settings._border = borderProps;
   }
 
-  // Spacing
+  // Spacing - only include if there are inline overrides
   const paddingProps = mapPaddingProperties(original);
+  if (Object.keys(paddingProps).length > 0) {
+    settings._padding = paddingProps;
+  }
+
   const marginProps = mapMarginProperties(original);
-  if (Object.keys(paddingProps).length > 0 || Object.keys(marginProps).length > 0) {
-    settings._spacing = {
-      ...paddingProps,
-      ...marginProps
-    };
+  if (Object.keys(marginProps).length > 0) {
+    settings._margin = marginProps;
   }
 
   // Layout

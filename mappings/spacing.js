@@ -140,11 +140,11 @@ const SPACING_PATTERNS = {
  * @returns {Object} - Mapped padding properties in Bricks format
  */
 function mapPaddingProperties(properties) {
-  const result = {};
+  let result = {};
   
   // Handle all-side padding
   if (properties["padding"]) {
-    result.padding = {
+    result = {
       top: properties["padding"],
       right: properties["padding"],
       bottom: properties["padding"],
@@ -160,8 +160,8 @@ function mapPaddingProperties(properties) {
   for (const side of sides) {
     const prop = `padding-${side}`;
     if (properties[prop]) {
-      result.padding = result.padding || {};
-      result.padding[side] = properties[prop];
+      result = result || {};
+      result[side] = properties[prop];
       hasPadding = true;
     }
   }
@@ -175,11 +175,11 @@ function mapPaddingProperties(properties) {
  * @returns {Object} - Mapped margin properties in Bricks format
  */
 function mapMarginProperties(properties) {
-  const result = {};
+  let result = {};
   
   // Handle all-side margin
   if (properties["margin"]) {
-    result.margin = {
+    result = {
       top: properties["margin"],
       right: properties["margin"],
       bottom: properties["margin"],
@@ -195,8 +195,8 @@ function mapMarginProperties(properties) {
   for (const side of sides) {
     const prop = `margin-${side}`;
     if (properties[prop]) {
-      result.margin = result.margin || {};
-      result.margin[side] = properties[prop];
+      result = result || {};
+      result[side] = properties[prop];
       hasMargin = true;
     }
   }
