@@ -5,7 +5,7 @@
 
 import { setupEventHandlers } from './ui/handlers.js';
 import { addNotificationStyles } from './ui/notifications.js';
-import { buildBricksJson } from './transformers/tree.js';
+import { buildElementorJson } from './transformers/tree.js';
 
 /**
  * Initialize the application
@@ -17,11 +17,11 @@ function initialize() {
   // Set up UI event handlers
   setupEventHandlers();
   
-  console.log('Oxygen to Bricks Converter initialized');
+  console.log('Oxygen to Elementor Converter initialized');
 }
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', initialize);
 
 // Export public API
-export { buildBricksJson };
+export { buildElementorJson };
