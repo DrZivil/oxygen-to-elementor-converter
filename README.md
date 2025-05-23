@@ -1,38 +1,41 @@
-# Oxygen to Bricks Converter
+# Oxygen to Elementor Converter
 
 ## Overview
 
-This tool converts Oxygen Builder JSON to Bricks Builder compatible format.
+This tool converts Oxygen Builder JSON to Elementor compatible format.
 
 ## Features
 
-- Converts Oxygen elements to their Bricks equivalents
-- Maps styling properties from Oxygen to Bricks
-- Handles Oxygen classes and converts them to Bricks global classes
+- Converts Oxygen elements to their Elementor equivalents
+- Maps styling properties from Oxygen to Elementor
+- Merges styles from Oxygen classes directly into Elementor element settings
 - Supports Oxygen 4.9+ JSON structure with "component" wrapper
-- Advanced class extraction from inline properties
-- Automatically detects common CSS utility class patterns
-- Deduplicates similar classes to avoid redundancy
+- Applies styles from Oxygen, including those from classes and inline properties
 
 ## Usage
 
 1. Export your Oxygen JSON structure
 2. Paste it into the converter
 3. Click "Convert"
-4. Copy the resulting Bricks JSON
-5. Import into Bricks Builder by pasting directly in the editor
+4. Copy the resulting Elementor JSON
+5. Paste directly into the Elementor editor (usually by right-clicking on a section/container and choosing 'Paste', or by dragging a JSON file onto the editor if that feature is supported by your Elementor version/setup for raw element JSON).
 
-### Using in Bricks Builder
+### Using in Elementor
 
-The converted JSON contains properly formatted global classes that Bricks Builder will recognize. You can:
+The converted JSON contains an array of Elementor elements with their settings directly applied. This array can be pasted into the Elementor editor. You can:
 
 1. Copy the entire converted JSON output
-2. Open Bricks Builder (try.bricksbuilder.io or your own Bricks installation)
-3. Right-click in the structure panel and paste
+2. Open Elementor editor on a page or template.
+3. Typically, you can right-click on a container or section in the Elementor editor and select 'Paste'. Alternatively, you might be able to paste directly into the main editor area or import from a .json file if you save the output.
 
-The elements, along with all classes, will be imported and ready to use.
+The elements will be imported and ready to use.
 
 ## Updates
+
+### Version 2.0.0 (October 2023)
+- Major: Converted functionality from Oxygen-to-Bricks to Oxygen-to-Elementor.
+- Maps Oxygen elements and styles to Elementor's JSON structure.
+- Outputs an array of Elementor elements for direct pasting.
 
 ### Version 1.3 (May 2025)
 - Improved style mapping to match Bricks format

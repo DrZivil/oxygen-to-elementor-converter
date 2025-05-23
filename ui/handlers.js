@@ -1,9 +1,9 @@
 /**
- * Oxygen to Bricks Converter - UI Handlers
+ * Oxygen to Elementor Converter - UI Handlers
  * Handles UI interactions and events
  */
 
-import { buildBricksJson } from '../transformers/tree.js';
+import { buildElementorJson } from '../transformers/tree.js';
 import { showNotification } from './notifications.js';
 import { formatJson } from '../utils/generators.js';
 
@@ -26,89 +26,27 @@ function handleConvertClick(event) {
   const outputEl = document.getElementById("output");
   
   try {
-    const input = JSON.parse(inputEl.value);
-    const bricksJson = buildBricksJson(input);
+    const inputData = JSON.parse(inputEl.value);
+    const elementorJsonArray = buildElementorJson(inputData); // Returns an array
 
-    // Validate parent references
-    const allParentsValid = bricksJson.content.every(
-      b => b.parent === "0" || bricksJson.content.some(p => p.id === b.parent)
-    );
-
-    if (!allParentsValid) {
-      showNotification("⚠️ Some elements reference missing parents. Bricks structure tree may not work.", "warning");
-    }
-
-    // Check if classes were converted
-    if (bricksJson.globalClasses.length > 0) {
-      showNotification(`Converted ${bricksJson.globalClasses.length} classes`, "success");
-      
-      // Display class information
-      displayClassInfo(bricksJson.globalClasses);
-    } else {
-      document.getElementById("class-list").innerHTML = "<p>No classes were found or converted.</p>";
+    // Elementor JSON is an array of elements, no parent validation needed here in the same way as Bricks.
+    // Elementor also doesn't have a separate globalClasses structure in the output JSON.
+    // So, the class display logic is removed.
+    const classListEl = document.getElementById("class-list");
+    if (classListEl) {
+        classListEl.innerHTML = "<p>Class styles from Oxygen are merged into Elementor element settings directly. There is no separate global class list in Elementor's JSON format.</p>";
     }
     
-    outputEl.value = formatJson(bricksJson);
-    showNotification("Conversion successful!", "success");
+    outputEl.value = formatJson(elementorJsonArray);
+    showNotification("Conversion to Elementor JSON successful!", "success");
   } catch (err) {
-    showNotification("Invalid JSON: " + err.message, "error");
+    showNotification("Invalid JSON or conversion error: " + err.message, "error");
   }
 }
 
-/**
- * Displays class information in the UI
- * @param {Array} globalClasses - Array of global classes
- */
-function displayClassInfo(globalClasses) {
-  const classListEl = document.getElementById("class-list");
-  if (!classListEl) return;
-  
-  classListEl.innerHTML = "";
-  
-  // Create a table to display class information
-  const table = document.createElement("table");
-  table.className = "class-table";
-  
-  // Add header row
-  const thead = document.createElement("thead");
-  thead.innerHTML = `
-    <tr>
-      <th>Oxygen Class</th>
-      <th>Bricks Class ID</th>
-      <th>Properties</th>
-    </tr>
-  `;
-  table.appendChild(thead);
-  
-  // Add rows for each converted class
-  const tbody = document.createElement("tbody");
-  globalClasses.forEach(cls => {
-    const tr = document.createElement("tr");
-    
-    // Class name
-    const tdName = document.createElement("td");
-    tdName.textContent = cls.name;
-    
-    // Class ID
-    const tdId = document.createElement("td");
-    tdId.textContent = cls.id;
-    
-    // Class properties
-    const tdProps = document.createElement("td");
-    const props = Object.keys(cls.settings).map(key => {
-      return `${key}: ${JSON.stringify(cls.settings[key]).substring(0, 30)}...`;
-    }).join(", ") || "None";
-    tdProps.textContent = props;
-    
-    tr.appendChild(tdName);
-    tr.appendChild(tdId);
-    tr.appendChild(tdProps);
-    tbody.appendChild(tr);
-  });
-  
-  table.appendChild(tbody);
-  classListEl.appendChild(table);
-}
+// The displayClassInfo function is no longer needed as Elementor conversion
+// doesn't produce a separate globalClasses list in the same way Bricks does.
+// Styles from Oxygen classes are intended to be merged into the Elementor elements directly.
 
 /**
  * Handles the load example button click
@@ -164,7 +102,7 @@ function handleDownloadClick(event) {
   const a = document.createElement("a");
   
   a.href = url;
-  a.download = "bricks-converted-" + new Date().getTime() + ".json";
+  a.download = "elementor-converted-" + new Date().getTime() + ".json";
   document.body.appendChild(a);
   a.click();
   
