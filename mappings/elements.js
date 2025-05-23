@@ -13,6 +13,8 @@ import { ELEMENT_MAPPING } from '../config/constants.js';
 function mapElementType(oxygenElementName, nodeOptions = {}, classDefinitions = []) {
   const allStyles = { ...(nodeOptions.original || {}) };
 
+  console.log(oxygenElementName);
+
   // Merge in styles from class definitions
   for (const classDef of classDefinitions) {
     if (classDef?.original && typeof classDef.original === 'object') {
@@ -21,8 +23,10 @@ function mapElementType(oxygenElementName, nodeOptions = {}, classDefinitions = 
   }
 
   // If flex/grid detected, force container type
-  if (allStyles["display"] === "flex" || allStyles["display"] === "grid") {
-    return "container";
+  if(oxygenElementName === "ct_section" || oxygenElementName === "ct_div_block") {
+    if (allStyles["display"] === "flex" || allStyles["display"] === "grid") {
+      return "container";
+    }
   }
 
   return ELEMENT_MAPPING[oxygenElementName] || "div";

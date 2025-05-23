@@ -3,7 +3,7 @@
  * Plugin Name: Oxygen to Bricks Converter
  * Plugin URI: https://yourdomain.com/plugins/oxygen-to-bricks-converter
  * Description: A tool that converts Oxygen 4.9 JSON to Bricks Builder format
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Philipp - Levels.dev
  * Author URI: https://wpconverters.com/
  * Text Domain: oxygen-to-bricks-converter
@@ -39,7 +39,7 @@ class OxygenToBricksConverter {
                 'oxygen-to-bricks-styles', 
                 plugin_dir_url(__FILE__) . 'assets/style.css',
                 array(),
-                '1.0.0'
+                '1.1.1'
             );
             wp_enqueue_style('oxygen-to-bricks-styles');
             
@@ -47,20 +47,27 @@ class OxygenToBricksConverter {
             wp_register_script(
                 'oxygen-to-bricks-script',
                 plugin_dir_url(__FILE__) . 'assets/main.js',
-                array('jquery'),
-                '1.0.0',
+                array(),
+                '1.1.1',
                 true
             );
             
             // Add module type attribute for ES6 modules
             add_filter('script_loader_tag', function($tag, $handle, $src) {
                 if ('oxygen-to-bricks-script' === $handle) {
-                    $tag = '<script type="module" src="' . esc_url($src) . '" id="oxygen-to-bricks-script-js"></script>';
+                    $tag = str_replace('<script ', '<script type="module" ', $tag);
                 }
                 return $tag;
             }, 10, 3);
             
             wp_enqueue_script('oxygen-to-bricks-script');
+            
+            // Add script localization if needed
+            wp_localize_script('oxygen-to-bricks-script', 'otb_data', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('otb_nonce'),
+                'plugin_url' => plugin_dir_url(__FILE__)
+            ));
         }
     }
     

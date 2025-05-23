@@ -1,11 +1,9 @@
-import { applyUnits } from "../utils/utilities.js";
-
 /**
- * Oxygen to Bricks Converter - Typography Mappings
- * Typography-specific property patterns and transformations
+ * Oxygen to Bricks Converter - Typography Mapping
+ * Maps Oxygen typography properties to Bricks typography properties
  */
 
-// Typography-specific CSS property patterns for automatic class detection
+// Typography patterns for automatic class detection
 const TYPOGRAPHY_PATTERNS = {
   // Text colors
   text: {
@@ -68,33 +66,31 @@ const TYPOGRAPHY_PATTERNS = {
 };
 
 /**
- * Maps typography properties from Oxygen format to Bricks format
- * @param {Object} properties - Original typography properties
- * @returns {Object} - Mapped typography properties in Bricks format
+ * Maps Oxygen typography properties to Bricks typography properties
+ * @param {Object} original - Original Oxygen properties
+ * @returns {Object} - Mapped typography properties for Bricks
  */
-function mapTypographyProperties(properties) {
-  const typographyProps = [
-    "font-family", "font-size", "font-weight", "font-style",
-    "line-height", "letter-spacing", "text-align", "text-decoration",
-    "text-transform"
+function mapTypographyProperties(original = {}) {
+  const typographyProps = {};
+  
+  // Extract typography properties
+  const typographyProperties = [
+    "font-size", "font-family", "font-weight", "line-height", 
+    "text-align", "text-decoration", "letter-spacing", "text-transform"
   ];
-
-  // Filter only typography properties and apply units
-  const filteredProps = Object.fromEntries(
-    Object.entries(properties).filter(([key]) =>
-      typographyProps.includes(key) || key.endsWith('-unit')
-    )
-  );
-
-  // Apply units to all properties
-  const result = applyUnits(filteredProps);
-
-  // Handle special cases like color
-  if (properties["color"] && properties["color"].startsWith('#')) {
-    result.color = { hex: properties["color"] };
+  
+  for (const prop of typographyProperties) {
+    if (original[prop] != null) {
+      typographyProps[prop] = original[prop];
+    }
   }
-
-  return result;
+  
+  // Handle color property
+  if (original["color"]?.startsWith("#")) {
+    typographyProps.color = { hex: original["color"] };
+  }
+  
+  return typographyProps;
 }
 
 export { TYPOGRAPHY_PATTERNS, mapTypographyProperties };

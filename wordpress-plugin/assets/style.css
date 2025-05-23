@@ -1,5 +1,7 @@
-/* Oxygen to Bricks Converter Styles */
+/* Oxygen to Bricks Converter - WordPress Plugin Styles */
+
 :root {
+    /* Colors from image 2 - ready>made website */
     --primary-color: #6873E5;
     --secondary-color: #F7984B;
     --accent-color: #45B99F;
@@ -10,10 +12,18 @@
     --success-color: #45B96F;
 }
 
+.oxygen-to-bricks-container * {
+    box-sizing: border-box;
+}
+
 .oxygen-to-bricks-container {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: var(--dark-color);
+    background-color: var(--light-color);
     max-width: 1200px;
-    margin: 2rem auto;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
 .otb-header {
@@ -22,15 +32,22 @@
 }
 
 .otb-title {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
-    color: #6873E5;
+    color: var(--primary-color);
 }
 
 .otb-description {
     color: #555;
-    font-size: 1rem;
+    font-size: 1.1rem;
+}
+
+.otb-note {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-style: italic;
 }
 
 .otb-converter-container {
@@ -54,12 +71,12 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #1A1A1A;
+    color: var(--dark-color);
 }
 
-.otb-input-container textarea, .otb-output-container textarea {
+#otb-input, #otb-output {
     width: 100%;
-    border: 1px solid #E0E0E6;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     padding: 1rem;
     font-family: monospace;
@@ -67,16 +84,15 @@
     resize: vertical;
     background-color: #FAFAFA;
     transition: border-color 0.2s;
-    min-height: 300px;
 }
 
-.otb-input-container textarea:focus, .otb-output-container textarea:focus {
+#otb-input:focus, #otb-output:focus {
     outline: none;
-    border-color: #6873E5;
+    border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(104, 115, 229, 0.2);
 }
 
-.otb-output-container textarea {
+#otb-output {
     background-color: #FBFBFB;
 }
 
@@ -110,14 +126,14 @@
 }
 
 .otb-btn.otb-primary {
-    background-color: #6873E5;
+    background-color: var(--primary-color);
     color: white;
 }
 
 .otb-btn.otb-secondary {
     background-color: white;
-    color: #1A1A1A;
-    border: 1px solid #E0E0E6;
+    color: var(--dark-color);
+    border: 1px solid var(--border-color);
 }
 
 .otb-btn.otb-primary:hover {
@@ -127,7 +143,7 @@
 }
 
 .otb-btn.otb-secondary:hover {
-    border-color: #6873E5;
+    border-color: var(--primary-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
@@ -173,43 +189,10 @@
     background-color: #f1f4f9;
 }
 
-.otb-notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    border-radius: 6px;
-    background-color: #333;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-    transform: translateY(100px);
-    opacity: 0;
-    transition: transform 0.3s, opacity 0.3s;
-}
-
-.otb-notification.show {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.otb-notification.success {
-    background-color: #45B96F;
-}
-
-.otb-notification.error {
-    background-color: #E54D4D;
-}
-
-.otb-notification.warning {
-    background-color: #F7984B;
-}
-
 .otb-footer {
     text-align: center;
     color: #777;
     font-size: 0.9rem;
-    margin-top: 2rem;
 }
 
 @media (max-width: 768px) {
@@ -218,11 +201,11 @@
     }
     
     .otb-title {
-        font-size: 1.75rem;
+        font-size: 2rem;
     }
     
     .otb-converter-container {
-        flex-direction: column;
+        padding: 1.5rem;
     }
     
     .otb-class-table {

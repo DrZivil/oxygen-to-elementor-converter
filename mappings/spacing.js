@@ -2,6 +2,7 @@
  * Oxygen to Bricks Converter - Spacing Mappings
  * Spacing-specific property patterns and transformations
  */
+import {applyUnits} from "../utils/utilities.js";
 
 // Spacing-specific CSS property patterns for automatic class detection
 const SPACING_PATTERNS = {
@@ -140,32 +141,48 @@ const SPACING_PATTERNS = {
  * @returns {Object} - Mapped padding properties in Bricks format
  */
 function mapPaddingProperties(properties) {
+  // First apply units to all padding properties
+  const paddingProps = [
+    "padding", "padding-top", "padding-right", "padding-bottom", "padding-left"
+  ];
+
+  // Filter and apply units
+  const propsWithUnits = Object.fromEntries(
+    Object.entries(properties)
+      .filter(([key]) => paddingProps.includes(key) || key.endsWith('-unit'))
+  );
+
+  const withUnits = applyUnits(propsWithUnits);
   let result = {};
-  
+
   // Handle all-side padding
-  if (properties["padding"]) {
+  if (withUnits["padding"]) {
     result = {
-      top: properties["padding"],
-      right: properties["padding"],
-      bottom: properties["padding"],
-      left: properties["padding"]
+      top: withUnits["padding"],
+      right: withUnits["padding"],
+      bottom: withUnits["padding"],
+      left: withUnits["padding"]
     };
     return result;
   }
-  
-  // Handle individual padding sides
-  const sides = ["top", "right", "bottom", "left"];
+
+  // Map Oxygen padding-* to Bricks top, right, bottom, left
+  const mapping = {
+    "padding-top": "top",
+    "padding-right": "right",
+    "padding-bottom": "bottom",
+    "padding-left": "left"
+  };
+
   let hasPadding = false;
-  
-  for (const side of sides) {
-    const prop = `padding-${side}`;
-    if (properties[prop]) {
-      result = result || {};
-      result[side] = properties[prop];
+
+  for (const [oxyProp, bricksProp] of Object.entries(mapping)) {
+    if (withUnits[oxyProp]) {
+      result[bricksProp] = withUnits[oxyProp];
       hasPadding = true;
     }
   }
-  
+
   return hasPadding ? result : {};
 }
 
@@ -175,32 +192,58 @@ function mapPaddingProperties(properties) {
  * @returns {Object} - Mapped margin properties in Bricks format
  */
 function mapMarginProperties(properties) {
+  // First apply units to all margin properties
+  const marginProps = [
+    "margin", "margin-top", "margin-right", "margin-bottom", "margin-left"
+  ];
+
+  // Filter and apply units
+  const propsWithUnits = Object.fromEntries(
+    Object.entries(properties)
+      .filter(([key]) => marginProps.includes(key) || key.endsWith('-unit'))
+  );
+
+  const withUnits = applyUnits(propsWithUnits);
   let result = {};
-  
+
   // Handle all-side margin
-  if (properties["margin"]) {
+  if (withUnits["margin"]) {
     result = {
-      top: properties["margin"],
-      right: properties["margin"],
-      bottom: properties["margin"],
-      left: properties["margin"]
+      top: withUnits["margin"],
+      right: withUnits["margin"],
+      bottom: withUnits["margin"],
+      left: withUnits["margin"]
     };
     return result;
   }
-  
-  // Handle individual margin sides
-  const sides = ["top", "right", "bottom", "left"];
+
+  // Special handling for auto units
+  const checkForAuto = (prop) => {
+    const unitProp = `${prop}-unit`;
+    if (properties[unitProp] === "auto") {
+      return "auto";
+    }
+    return withUnits[prop];
+  };
+
+  // Map Oxygen margin-* to Bricks top, right, bottom, left
+  const mapping = {
+    "margin-top": "top",
+    "margin-right": "right",
+    "margin-bottom": "bottom",
+    "margin-left": "left"
+  };
+
   let hasMargin = false;
-  
-  for (const side of sides) {
-    const prop = `margin-${side}`;
-    if (properties[prop]) {
-      result = result || {};
-      result[side] = properties[prop];
+
+  for (const [oxyProp, bricksProp] of Object.entries(mapping)) {
+    // Check if the property exists in withUnits or has auto unit
+    if (withUnits[oxyProp] || properties[`${oxyProp}-unit`] === "auto") {
+      result[bricksProp] = checkForAuto(oxyProp);
       hasMargin = true;
     }
   }
-  
+
   return hasMargin ? result : {};
 }
 

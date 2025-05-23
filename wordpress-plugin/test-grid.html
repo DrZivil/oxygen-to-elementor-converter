@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .test-result {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Grid Layout Test for WordPress Plugin</h1>
+    
+    <div id="test-output">
+        <p>Running test...</p>
+    </div>
+    
+    <script type="module" src="assets/test-grid.js"></script>
+    
+    <script>
+        // Capture console logs and display them
+        const output = document.getElementById('test-output');
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function addToOutput(message, isError = false) {
+            const pre = document.createElement('pre');
+            pre.textContent = message;
+            pre.style.color = isError ? 'red' : 'black';
+            output.appendChild(pre);
+        }
+        
+        console.log = function(...args) {
+            addToOutput(args.join(' '));
+            originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            addToOutput(args.join(' '), true);
+            originalError.apply(console, args);
+        };
+    </script>
+</body>
+</html>
